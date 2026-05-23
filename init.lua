@@ -108,7 +108,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
-
+vim.opt.autoread = true
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
@@ -237,12 +237,39 @@ end
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
   'ThePrimeagen/vim-be-good',
-
+  {
+    'folke/persistence.nvim',
+    event = 'VimEnter',
+    opts = {},
+    config = function(_, opts)
+      require('persistence').setup(opts)
+      if vim.fn.argc() == 0 then
+        require('persistence').load()
+      end
+    end,
+  },
+  {
+    'christoomey/vim-tmux-navigator',
+    cmd = {
+      'TmuxNavigateLeft',
+      'TmuxNavigateDown',
+      'TmuxNavigateUp',
+      'TmuxNavigateRight',
+      'TmuxNavigatePrevious',
+      'TmuxNavigatorProcessList',
+    },
+    keys = {
+      { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
+      { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
+      { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
+      { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
+      { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
+    },
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
+  -- keys can be used to configure plugin behavior/loading/etc
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
